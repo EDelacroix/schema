@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar
+  xml:lang="fr"
+  xmlns="http://relaxng.org/ns/structure/1.0"
+  ns="http://www.tei-c.org/ns/1.0"
+  datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  >
+  <start>
+    <ref name="TEI"/>
+  </start>
+  <div>
+    <a:documentation>Structure</a:documentation>
+    <define name="TEI">
+      <element name="TEI">
+        <a:documentation>Élément racine</a:documentation>
+        <ref name="xml.lang"/>
+        <ref name="teiHeader"/>
+        <ref name="text"/>
+      </element>
+    </define>
+    <define name="text">
+      <element name="text">
+        <ref name="body"/>
+      </element>
+    </define>
+    <define name="teiHeader">
+      <element name="teiHeader">
+        <a:documentation>La page de titre électronique, avec les métadonnées</a:documentation>
+        <ref name="fileDesc"/>
+        <ref name="profileDesc"/>
+      </element>
+    </define>
+    <define name="fileDesc">
+      <element name="fileDesc">
+        <a:documentation>Description bibliographique du fichier</a:documentation>
+        <ref name="titleStmt"/>
+        <ref name="editionStmt"/>
+        <ref name="publicationStmt"/>
+      </element>
+    </define>
+    <define name="editionStmt">
+      <element name="editionStmt">
+        <a:documentation>Description de l’éditon électronique</a:documentation>
+        <ref name="edition"/>
+        <zeroOrMore>
+          <ref name="respStmt"/>
+        </zeroOrMore>
+      </element>
+    </define>
+    <define name="titleStmt">
+      <element name="titleStmt">
+        <a:documentation>Titre (! obligatoire) et auteur de la lettre</a:documentation>
+        <ref name="title"/>
+        <ref name="author"/>
+      </element>
+    </define>
+    <define name="publicationStmt">
+      <element name="editionStmt">
+        <a:documentation>Mention de publication de l’éditon électronique ()</a:documentation>
+        <ref name="edition"/>
+        <zeroOrMore>
+          <ref name="respStmt"/>
+        </zeroOrMore>
+      </element>
+    </define>
+    <define name="profileDesc">
+      <element name="prfileDesc">
+        <a:documentation>Profil du document dans son corpus</a:documentation>
+        
+      </element>
+    </define>
+    <define name="body">
+      <element name="body">
+        <ref name="letter"/>
+      </element>
+    </define>
+  </div>
+  <div>
+    <a:documentation>Champs de métadonnées en entête</a:documentation>
+    <define name="author">
+      <element name="author">
+        <a:documentation>Auteur de la lettre, avec son code identifiant dans l’attribut <a:att>key</a:att></a:documentation>
+        <a:example>
+          <author key="Delacroix, Eugène (1798-1863)">Eugène Delacroix</author>
+        </a:example>
+        <attribute name="key"/>
+        <text/>
+      </element>
+    </define>
+    <define name="edition">
+      <element name="edition">
+        <a:documentation>Nom de l’édition électronique</a:documentation>
+        <a:example>
+          <edition>Correspondance Delacroix, Centre André Chastel</edition>
+        </a:example>
+        <text/>
+      </element>
+    </define>
+        <define name="msDesc">
+      <element name="msDesc">
+        <a:documentation>Description d’un document (archivistique <a:el>msIdentifier</a:el>, logique <a:el>msContents</a:el>, matérielle <a:el>physDesc</a:el>…)</a:documentation>
+        <ref name="msIdentifier"/>
+        <optional>
+          <ref name="msContents"/>
+        </optional>
+        <ref name="physDesc"/>
+      </element>
+    </define>
+    <define name="msIdentifier">
+      <element name="msIdentifier">
+        <a:documentation>Identification d’un document</a:documentation>
+        <zeroOrMore>
+          <choice>
+            <element name="collection">
+              <text/>
+            </element>
+            <element name="country">
+              <text/>
+            </element>
+            <element name="institution">
+              <text/>
+            </element>
+            <element name="repository">
+              <text/>
+            </element>
+            <element name="settlement">
+              <text/>
+            </element>
+          </choice>
+        </zeroOrMore>
+        <oneOrMore>
+          <element name="idno">
+            <text/>
+          </element>
+        </oneOrMore>
+      </element>
+    </define>
+    <define name="msContents">
+      <element name="msContents">
+        <a:documentation>Contenu d’un document</a:documentation>
+        <oneOrMore>
+          <element name="msItem">
+            <optional>
+              <element name="locus">
+                <text/>
+              </element>
+            </optional>
+            <zeroOrMore>
+              <choice>
+                <ref name="title"/>
+                <ref name="author"/>
+              </choice>
+            </zeroOrMore>
+          </element>
+        </oneOrMore>
+      </element>
+    </define>
+    <define name="physDesc">
+      <element name="physDesc">
+        <a:documentation>Description physique d’un document</a:documentation>
+        <zeroOrMore>
+          <ref name="p"/>
+        </zeroOrMore>
+        <element name="objectDesc">
+          <attribute name="form"/>
+          <element name="supportDesc">
+            <optional>
+              <attribute name="material"/>
+            </optional>
+            <optional>
+              <element name="support">
+                <text/>
+              </element>
+            </optional>
+            <optional>
+              <element name="extent">
+                <element name="dimensions">
+                  <attribute name="unit"/>
+                  <interleave>
+                    <optional>
+                      <element name="depth">
+                        <text/>
+                      </element>
+                    </optional>
+                    <element name="height">
+                      <text/>
+                    </element>
+                    <element name="width">
+                      <text/>
+                    </element>
+                  </interleave>
+                </element>
+              </element>
+            </optional>
+          </element>
+        </element>
+      </element>
+    </define>
+
+    <define name="respStmt">
+      <element name="respStmt">
+        <a:documentation>Responsabilité dans l'élaboration du texte électronique (pas le contenu intellectuel, cf. <a:el>titleStmt</a:el>)</a:documentation>
+        <a:example>
+          <respStmt>
+            <name>Gaëlle Lafage</name>
+            <resp>Transcription</resp>
+            <resp>Editeur scientifique</resp>
+          </respStmt>
+        </a:example>
+        <element name="name">
+          <a:documentation>Personne qui est intervenue dans le fichier</a:documentation>
+          <text/>
+        </element>
+        <element name="resp">
+          <a:documentation>Rôle dans l’établissement du texte électronique</a:documentation>
+          <text/>
+        </element>
+      </element>
+    </define>
+    <define name="title">
+      <element name="title">
+        <a:documentation>Titre</a:documentation>
+        <a:example>
+          <title>Lettre à [Joseph-Fernand Boissard], 15 [mai 1843]</title>
+        </a:example>
+        <text/>
+      </element>
+    </define>
+
+  </div>
+  <div>
+    <a:documentation>Blocs du corps de la lettre</a:documentation>
+    <define name="letter">
+      <optional>
+        <ref name="pb"/>
+      </optional>
+      <optional>
+        <ref name="opener"/>
+      </optional>
+      <oneOrMore>
+        <ref name="p"/>
+        <ref name="pb"/>
+      </oneOrMore>
+      <optional>
+        <ref name="closer"/>
+      </optional>
+      <optional>
+        <ref name="pb"/>
+      </optional>
+    </define>
+    <define name="closer">
+      <element name="closer">
+        <a:documentation>Section de fin d’une lettre</a:documentation>
+        <ref name="dateline"/>
+        <ref name="lb"/>
+        <ref name="signed"/>
+      </element>
+    </define>
+    <define name="opener">
+      <element name="opener">
+        <a:documentation>Section de début d’une lettre</a:documentation>
+        <ref name="dateline"/>
+        <ref name="lb"/>
+        <ref name="signed"/>
+      </element>
+    </define>
+  </div>
+  <div>
+    <a:documentation>Typographie et indexation</a:documentation>
+    <define name="emph">
+      <element name="emph">
+        <a:documentation>Mise en valeur, par exemple souligné dans la lettre, généralement rendu par de l’italique à l’imprimé (ou à l’écran). Un attribut libre <a:att>rend</a:att> permet de préciser d’autres types de mise en valeur (par exemple encre rouge, plus grand…), l’éditeur établissant les mots clés qu’il veut retrouver une classe css pour l’affichage.</a:documentation>
+        <attribute name="rend"/>
+        <text/>
+      </element>
+    </define>
+    <define name="persName">
+      <element name="persName">
+        <a:documentation>Nom de personne cité en cours de texte, peut être identifié par un clé <a:att>key</a:att></a:documentation>
+        <optional>
+          <ref name="key"/>
+        </optional>
+        <zeroOrMore>
+          <choice>
+            <text/>
+            <ref name="orgName"/>
+            <ref name="sup"/>
+          </choice>
+        </zeroOrMore>
+      </element>
+    </define>
+    <define name="sup">
+      <element name="hi">
+        <a:documentation>Exposant &lt;html:sup></a:documentation>
+        <attribute name="rend">
+          <value>sup</value>
+        </attribute>
+      </element>
+    </define>
+  </div>
+  <div>
+    <a:documentation>Attributs et types de données</a:documentation>
+    <define name="key">
+      <attribute name="key">
+        <a:documentation>Terme normalisé (clé de regroupement) pour une entité indexable (personne, lieu…)</a:documentation>
+      </attribute>
+    </define>
+    <define name="xml.lang">
+      <attribute name="xml:lang">
+        <a:documentation>Code normalisé de langue</a:documentation>
+        <data type="string">
+          <param name="pattern">[a-z][a-z][a-z]?</param>
+        </data>
+      </attribute>
+    </define>
+  </div>
+</grammar>
