@@ -52,14 +52,14 @@
     </define>
     <define name="titleStmt">
       <element name="titleStmt">
-        <a:documentation>Titre (! obligatoire) et auteur de la lettre</a:documentation>
+        <a:documentation>Titre et auteur de la lettre (! obligatoire)</a:documentation>
         <ref name="title"/>
         <ref name="author"/>
       </element>
     </define>
     <define name="publicationStmt">
       <element name="editionStmt">
-        <a:documentation>Mention de publication de l’éditon électronique ()</a:documentation>
+        <a:documentation>Mention de publication de l’éditon électronique (pas du contenu intellectuel, cf. <a:el>sourceDesc</a:el>)</a:documentation>
         <ref name="edition"/>
         <zeroOrMore>
           <ref name="respStmt"/>
@@ -67,9 +67,22 @@
       </element>
     </define>
     <define name="profileDesc">
-      <element name="prfileDesc">
-        <a:documentation>Profil du document dans son corpus</a:documentation>
-        
+      <element name="profileDesc">
+        <a:documentation>Profil du document, description et métadonnées non bibliographique, valable dans le contexte d’une collection électronique, notamment les métadonnées d’une lettre <a:el>correspDesc</a:el>.</a:documentation>
+        <ref name="correspDesc"/>
+        <optional>
+          <element name="langUsage">
+            <a:documentation>Code de langue</a:documentation>
+            <element name="language">
+              <attribute name="ident">
+                <choice>
+                  <value>fr</value>
+                </choice>
+              </attribute>
+              <empty/>
+            </element>
+          </element>
+        </optional>
       </element>
     </define>
     <define name="body">
@@ -80,6 +93,41 @@
   </div>
   <div>
     <a:documentation>Champs de métadonnées en entête</a:documentation>
+    <define name="correspDesc">
+      <element name="correspDesc">
+        <a:documentation>Bloc spécifique de description d’une correspondance, avec notamment les informations obligatoires d’expédition, de réception, et si nécessaire, de lien.</a:documentation>
+        <a:example>
+          <correspDesc>
+                <correspAction type="sent">
+                    <persName key="Delacroix, Eugène (1798-1863)"
+                        ref="https://data.bnf.fr/fr/11899161">Eugène Delacroix</persName>
+                    <date when="1843-05-16"/>
+                </correspAction>
+                <correspAction type="received">
+                    <persName key="Curmer, Léon (1801-1870)"
+                        ref="https://data.bnf.fr/fr/13006646/leon_curmer/">Léon Curmer</persName>
+                    <placeName key="Paris" ref="https://www.geonames.org/2988507">Paris</placeName>
+                </correspAction>
+                <correspContext>
+                    <ref type="next" target="http://test"/>
+                    <ref type="prev" target="http://test"/>
+                    <ref type="replyTo" target="http://test"/>
+                    <ref type="repliedBy" target="http://test"/>
+                </correspContext>
+            </correspDesc>
+        </a:example>
+        <ref name="sent"/>
+      </element>
+    </define>
+    <define name="sent">
+      <element name="correspAction">
+        <a:documentation>Information d’expédition</a:documentation>
+        <attribute name="type">
+          <value>sent</value>
+        </attribute>
+        
+      </element>
+    </define>
     <define name="author">
       <element name="author">
         <a:documentation>Auteur de la lettre, avec son code identifiant dans l’attribut <a:att>key</a:att></a:documentation>
@@ -251,12 +299,34 @@
         <ref name="pb"/>
       </optional>
     </define>
+    <define name="flow">
+      <zeroOrMore>
+        <choice>
+          <text/>
+          <ref name="inline"/>
+          <ref name="note"/>
+          <ref name="pb"/>
+        </choice>
+      </zeroOrMore>
+    </define>
     <define name="closer">
       <element name="closer">
         <a:documentation>Section de fin d’une lettre</a:documentation>
         <ref name="dateline"/>
         <ref name="lb"/>
         <ref name="signed"/>
+      </element>
+    </define>
+    <define name="dateline">
+      <element name="dateline">
+        <a:documentation>Mention de date, de temps ou de lieu, ex : donné le … à … ("datum", dans une lettre, une charte…)</a:documentation>
+        <ref name="flow"/>
+      </element>
+    </define>
+    <define name="p">
+      <element name="p">
+        <a:documentation>Paragraphe de texte, &lt;html5:p&gt;</a:documentation>
+        <ref name="flow"/>
       </element>
     </define>
     <define name="opener">
@@ -267,9 +337,82 @@
         <ref name="signed"/>
       </element>
     </define>
+    <define name="signed">
+      <element name="signed">
+        <a:documentation>Signature</a:documentation>
+        <ref name="flow"/>
+      </element>
+    </define>
   </div>
   <div>
     <a:documentation>Typographie et indexation</a:documentation>
+    <define name="inline">
+      <choice>
+        <ref name="emph"/>
+        <ref name="lb"/>
+        <ref name="persName"/>
+        <ref name="placeName"/>
+        <ref name="sup"/>
+      </choice>
+    </define>
+    <define name="note">
+      <element name="note">
+        <a:documentation>Une note, encodée dans le flux du texte, au point de l’appel.</a:documentation>
+        <optional>
+          <attribute name="resp">
+            <choice>
+              <value>author</value>
+              <a:documentation>note de l’auteur</a:documentation>
+              <value>editor</value>
+              <a:documentation>note de l’éditeur</a:documentation>
+              <value>translator</value>
+              <a:documentation>note du traducteur</a:documentation>
+              <value>©</value>
+              <a:documentation>note protégée par le droit d’auteur au moment de l’écriture du fichier</a:documentation>
+              <text/>
+            </choice>
+          </attribute>
+        </optional>
+        <optional>
+          <attribute name="place">
+            <choice>
+              <a:documentation>dans la marge inférieure</a:documentation>
+              <value>bottom</value>
+              <a:documentation>dans la marge</a:documentation>
+              <value>margin</value>
+              <data type="token"/>
+            </choice>
+          </attribute>
+        </optional>
+        <choice>
+          <oneOrMore>
+            <choice>
+              <text/>
+              <ref name="inline"/>
+            </choice>
+          </oneOrMore>
+          <oneOrMore>
+            <choice>
+              <ref name="p"/>
+            </choice>
+          </oneOrMore>
+        </choice>
+      </element>
+    </define>
+    <define name="pb">
+      <element name="pb">
+        <a:documentation>Saut de page, “page break”, à placer avant le début du texte de la page, avec le numéro</a:documentation>
+        <attribute name="n"/>
+        <choice>
+          <optional>
+            <attribute name="facs"/>
+          </optional>
+          <optional>
+            <ref name="xml.id"/>
+          </optional>
+        </choice>
+      </element>
+    </define>
     <define name="emph">
       <element name="emph">
         <a:documentation>Mise en valeur, par exemple souligné dans la lettre, généralement rendu par de l’italique à l’imprimé (ou à l’écran). Un attribut libre <a:att>rend</a:att> permet de préciser d’autres types de mise en valeur (par exemple encre rouge, plus grand…), l’éditeur établissant les mots clés qu’il veut retrouver une classe css pour l’affichage.</a:documentation>
@@ -277,16 +420,38 @@
         <text/>
       </element>
     </define>
+    <define name="lb">
+      <element name="lb">
+        <a:documentation>Saut de ligne “line break” &lt;html5:br/&gt;</a:documentation>
+        <empty/>
+      </element>
+    </define>
+
     <define name="persName">
       <element name="persName">
         <a:documentation>Nom de personne cité en cours de texte, peut être identifié par un clé <a:att>key</a:att></a:documentation>
         <optional>
           <ref name="key"/>
         </optional>
+        <optional>
+          <ref name="ref"/>
+        </optional>
         <zeroOrMore>
           <choice>
             <text/>
-            <ref name="orgName"/>
+            <ref name="note"/>
+            <ref name="sup"/>
+          </choice>
+        </zeroOrMore>
+      </element>
+    </define>
+    <define name="placeName">
+      <element name="placeName">
+        <a:documentation>Nom de lieu</a:documentation>
+        <zeroOrMore>
+          <choice>
+            <text/>
+            <ref name="note"/>
             <ref name="sup"/>
           </choice>
         </zeroOrMore>
@@ -308,13 +473,28 @@
         <a:documentation>Terme normalisé (clé de regroupement) pour une entité indexable (personne, lieu…)</a:documentation>
       </attribute>
     </define>
+    <define name="ref">
+      <attribute name="ref">
+        <a:documentation>URI de référence pour un terme indexable : auteur, titre, personne, lieu…</a:documentation>
+        <data type="anyURI"/>
+      </attribute>
+    </define>
+    <define name="xml.id">
+      <attribute name="xml:id">
+        <a:documentation>Identifiant, au moins unique pour le document</a:documentation>
+        <data type="ID"/>
+      </attribute>
+    </define>
     <define name="xml.lang">
       <attribute name="xml:lang">
         <a:documentation>Code normalisé de langue</a:documentation>
-        <data type="string">
-          <param name="pattern">[a-z][a-z][a-z]?</param>
-        </data>
+        <ref name="lang"/>
       </attribute>
+    </define>
+    <define name="lang">
+      <data type="string">
+        <param name="pattern">[a-z][a-z][a-z]?</param>
+      </data>
     </define>
   </div>
 </grammar>
