@@ -92,7 +92,7 @@
           <element name="title">
             <optional>
               <attribute name="type">
-                <value>main</value>
+                <value>sub</value>
               </attribute>
             </optional>
             <ref name="titletext"/>
@@ -154,15 +154,16 @@
               <placeName key="Paris" ref="https://www.geonames.org/2988507">Paris</placeName>
             </correspAction>
             <correspContext>
-              <correspContext>
-                <ref target="{reponsea}" type="replyTo"/>
-              </correspContext>
+              <ref target="{reponsea}" type="replyTo"/>
             </correspContext>
           </correspDesc>
         </a:example>
         <ref name="sent"/>
         <optional>
           <ref name="received"/>
+        </optional>
+        <optional>
+          <ref name="correspContext"/>
         </optional>
       </element>
     </define>
@@ -194,6 +195,16 @@
             <ref name="placeName"/>
           </choice>
         </zeroOrMore>
+      </element>
+    </define>
+    <define name="correspContext">
+      <element name="correspContext">
+        <element name="ref">
+          <attribute name="type">
+            <value>replyTo</value>
+          </attribute>
+          <ref name="target"/>
+        </element>
       </element>
     </define>
     <define name="author">
@@ -267,6 +278,15 @@
           <ref name="msContents"/>
         </optional>
         <ref name="physDesc"/>
+        <optional>
+          <element name="history">
+            <oneOrMore>
+              <element name="provenance">
+                <ref name="flow"/>
+              </element>
+            </oneOrMore>
+          </element>
+        </optional>
       </element>
     </define>
     <define name="msIdentifier">
@@ -367,6 +387,11 @@
             </optional>
           </element>
         </element>
+        <optional>
+          <element name="accMat">
+            <ref name="flow"/>
+          </element>
+        </optional>
       </element>
     </define>
     <define name="publisher">
@@ -518,6 +543,7 @@
         <ref name="lb"/>
         <ref name="persName"/>
         <ref name="placeName"/>
+        <ref name="ref"/>
         <ref name="sup"/>
       </choice>
     </define>
@@ -536,7 +562,7 @@
         <ref name="key"/>
       </optional>
       <optional>
-        <ref name="ref"/>
+        <ref name="ref.att"/>
       </optional>
       <zeroOrMore>
         <choice>
@@ -650,6 +676,14 @@
         <ref name="keytext"/>
       </element>
     </define>
+    <define name="ref">
+      <element name="ref">
+        <a:documentation>Lien simple, html5:&lt;a href="@target">texte&lt;/a>. Pour les liens internes, utiliser une URI ancre, #pb0101 (page 101).</a:documentation>
+        <ref name="target"/>
+        <ref name="titletext"/>
+      </element>
+    </define>
+    
     <define name="sup">
       <element name="hi">
         <a:documentation>Exposant &lt;html:sup></a:documentation>
@@ -666,9 +700,15 @@
         <a:documentation>Terme normalisé (clé de regroupement) pour une entité indexable (personne, lieu…)</a:documentation>
       </attribute>
     </define>
-    <define name="ref">
+    <define name="ref.att">
       <attribute name="ref">
         <a:documentation>URI de référence pour un terme indexable : auteur, titre, personne, lieu…</a:documentation>
+        <data type="anyURI"/>
+      </attribute>
+    </define>
+    <define name="target">
+      <attribute name="target">
+        <a:documentation>URI, cible d’un lien</a:documentation>
         <data type="anyURI"/>
       </attribute>
     </define>
