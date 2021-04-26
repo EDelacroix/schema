@@ -446,8 +446,10 @@
       </optional>
       <oneOrMore>
         <choice>
+          <ref name="address"/>
           <ref name="p"/>
           <ref name="pb"/>
+          <ref name="stamp"/>
         </choice>
       </oneOrMore>
       <optional>
@@ -470,16 +472,33 @@
         </choice>
       </zeroOrMore>
     </define>
+    <define name="address">
+      <element name="address">
+        <a:documentation>Adresse postale de l'éditeur du texte</a:documentation>
+        <oneOrMore>
+          <choice>
+            <element name="addrLine">
+              <ref name="flow"/>
+            </element>
+            <ref name="note"/>
+            <ref name="persName"/>
+            <ref name="placeName"/>
+          </choice>
+        </oneOrMore>
+      </element>
+    </define>
     <define name="closer">
       <element name="closer">
         <a:documentation>Section de fin d’une lettre</a:documentation>
         <zeroOrMore>
           <choice>
+            <ref name="address"/>
             <ref name="dateline"/>
             <ref name="lb"/>
             <ref name="pb"/>
             <ref name="salute"/>
             <ref name="signed"/>
+            <ref name="stamp"/>
           </choice>
         </zeroOrMore>
       </element>
@@ -490,24 +509,26 @@
         <ref name="flow"/>
       </element>
     </define>
-    <define name="p">
-      <element name="p">
-        <a:documentation>Paragraphe de texte, &lt;html5:p&gt;</a:documentation>
-        <ref name="flow"/>
-      </element>
-    </define>
     <define name="opener">
       <element name="opener">
         <a:documentation>Section de début d’une lettre</a:documentation>
         <zeroOrMore>
           <choice>
+            <ref name="address"/>
             <ref name="dateline"/>
             <ref name="lb"/>
             <ref name="pb"/>
             <ref name="salute"/>
             <ref name="signed"/>
+            <ref name="stamp"/>
           </choice>
         </zeroOrMore>
+      </element>
+    </define>
+    <define name="p">
+      <element name="p">
+        <a:documentation>Paragraphe de texte, &lt;html5:p&gt;</a:documentation>
+        <ref name="flow"/>
       </element>
     </define>
     <define name="postscript">
@@ -532,19 +553,39 @@
         <ref name="flow"/>
       </element>
     </define>
+    <define name="stamp">
+      <element name="stamp">
+        <a:documentation>Tampon</a:documentation>
+        <a:example>
+          <stamp><date when="1846-05-16">16 mai 1846</date></stamp>
+        </a:example>
+        <zeroOrMore>
+          <choice>
+            <text/>
+            <ref name="date"/>
+            <ref name="note"/>
+          </choice>
+        </zeroOrMore>
+      </element>
+    </define>
   </div>
   <div>
     <a:documentation>Typographie et indexation</a:documentation>
     <define name="inline">
       <choice>
+        <ref name="add"/>
         <ref name="date"/>
+        <ref name="del"/>
         <ref name="emph"/>
         <ref name="i"/>
         <ref name="lb"/>
         <ref name="persName"/>
         <ref name="placeName"/>
         <ref name="ref"/>
+        <ref name="rs"/>
+        <ref name="stamp"/>
         <ref name="sup"/>
+        <ref name="u"/>
       </choice>
     </define>
     <define name="titletext">
@@ -553,6 +594,15 @@
           <text/>
           <ref name="emph"/>
           <ref name="i"/>
+          <ref name="sup"/>
+        </choice>
+      </zeroOrMore>
+    </define>
+    <define name="deladd">
+      <zeroOrMore>
+        <choice>
+          <text/>
+          <ref name="note"/>
           <ref name="sup"/>
         </choice>
       </zeroOrMore>
@@ -616,6 +666,58 @@
         </choice>
       </element>
     </define>
+    <define name="add">
+      <element name="add">
+        <a:documentation>Addition</a:documentation>
+        <attribute name="place">
+          <choice>
+            <value>above</value>
+            <text/>
+          </choice>
+        </attribute>
+        <ref name="deladd"/>
+      </element>
+    </define>
+    <define name="date">
+      <element name="date">
+        <a:documentation>Date</a:documentation>
+        <optional>
+          <ref name="when"/>
+        </optional>
+        <text/>
+      </element>
+    </define>
+    <define name="del">
+      <element name="del">
+        <a:documentation>Suppression (rature) &lt;html5:del&gt;</a:documentation>
+        <ref name="deladd"/>
+      </element>
+    </define>
+    <define name="emph">
+      <element name="emph">
+        <a:documentation>Mise en valeur, par exemple souligné dans la lettre, généralement rendu par de l’italique à l’imprimé (ou à l’écran). Un attribut libre <a:att>rend</a:att> permet de préciser d’autres types de mise en valeur (par exemple encre rouge, plus grand…), l’éditeur établissant les mots clés qu’il veut retrouver une classe css pour l’affichage.</a:documentation>
+        <ref name="deladd"/>
+      </element>
+    </define>
+    <define name="i">
+      <element name="hi">
+        <a:documentation>Italique &lt;html:i></a:documentation>
+        <attribute name="rend">
+          <choice>
+            <value>i</value>
+            <value>it</value>
+            <value>italic</value>
+          </choice>
+        </attribute>
+        <ref name="deladd"/>
+      </element>
+    </define>
+    <define name="lb">
+      <element name="lb">
+        <a:documentation>Saut de ligne “line break” &lt;html5:br/&gt;</a:documentation>
+        <empty/>
+      </element>
+    </define>
     <define name="pb">
       <element name="pb">
         <a:documentation>Saut de page, “page break”, à placer avant le début du texte de la page, avec le numéro</a:documentation>
@@ -628,40 +730,6 @@
             <ref name="xml.id"/>
           </optional>
         </choice>
-      </element>
-    </define>
-    <define name="date">
-      <element name="date">
-        <a:documentation>Date</a:documentation>
-        <optional>
-          <ref name="when"/>
-        </optional>
-        <text/>
-      </element>
-    </define>
-    <define name="emph">
-      <element name="emph">
-        <a:documentation>Mise en valeur, par exemple souligné dans la lettre, généralement rendu par de l’italique à l’imprimé (ou à l’écran). Un attribut libre <a:att>rend</a:att> permet de préciser d’autres types de mise en valeur (par exemple encre rouge, plus grand…), l’éditeur établissant les mots clés qu’il veut retrouver une classe css pour l’affichage.</a:documentation>
-        <attribute name="rend"/>
-        <text/>
-      </element>
-    </define>
-    <define name="i">
-      <element name="hi">
-        <a:documentation>Italique &lt;html:i></a:documentation>
-        <attribute name="rend">
-          <choice>
-            <value>it</value>
-            <value>i</value>
-          </choice>
-        </attribute>
-        <text/>
-      </element>
-    </define>
-    <define name="lb">
-      <element name="lb">
-        <a:documentation>Saut de ligne “line break” &lt;html5:br/&gt;</a:documentation>
-        <empty/>
       </element>
     </define>
     <define name="persName">
@@ -679,8 +747,23 @@
     <define name="ref">
       <element name="ref">
         <a:documentation>Lien simple, html5:&lt;a href="@target">texte&lt;/a>. Pour les liens internes, utiliser une URI ancre, #pb0101 (page 101).</a:documentation>
+        <optional>
+          <attribute name="type">
+            <choice>
+              <value>letter</value>
+              <text/>
+            </choice>
+          </attribute>
+        </optional>
         <ref name="target"/>
         <ref name="titletext"/>
+      </element>
+    </define>
+    <define name="rs">
+      <element name="rs">
+        <a:documentation>Nom de personne cité en cours de texte, peut être identifié par un clé <a:att>key</a:att></a:documentation>
+        <attribute name="type"/>
+        <ref name="keytext"/>
       </element>
     </define>
     
@@ -690,6 +773,19 @@
         <attribute name="rend">
           <value>sup</value>
         </attribute>
+        <text/>
+      </element>
+    </define>
+    <define name="u">
+      <element name="hi">
+        <a:documentation>Souligné &lt;html:u></a:documentation>
+        <attribute name="rend">
+          <choice>
+            <value>u</value>
+            <value>underline</value>
+          </choice>
+        </attribute>
+        <text/>
       </element>
     </define>
   </div>
