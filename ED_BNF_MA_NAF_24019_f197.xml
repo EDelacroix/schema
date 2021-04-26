@@ -79,7 +79,7 @@
                         Boissard</persName>
                     <placeName key="Paris" ref="https://www.geonames.org/2988507">Paris</placeName>
                 </correspAction>
-                <correspContext>
+                 <correspContext>
                     <ref type="next" target="http://test"/>
                     <ref type="prev" target="http://test"/>
                     <ref type="replyTo" target="http://test"/>
