@@ -595,15 +595,7 @@
           <ref name="emph"/>
           <ref name="i"/>
           <ref name="sup"/>
-        </choice>
-      </zeroOrMore>
-    </define>
-    <define name="deladd">
-      <zeroOrMore>
-        <choice>
-          <text/>
           <ref name="note"/>
-          <ref name="sup"/>
         </choice>
       </zeroOrMore>
     </define>
@@ -675,7 +667,7 @@
             <text/>
           </choice>
         </attribute>
-        <ref name="deladd"/>
+        <ref name="titletext"/>
       </element>
     </define>
     <define name="date">
@@ -690,13 +682,13 @@
     <define name="del">
       <element name="del">
         <a:documentation>Suppression (rature) &lt;html5:del&gt;</a:documentation>
-        <ref name="deladd"/>
+        <ref name="titletext"/>
       </element>
     </define>
     <define name="emph">
       <element name="emph">
         <a:documentation>Mise en valeur, par exemple souligné dans la lettre, généralement rendu par de l’italique à l’imprimé (ou à l’écran). Un attribut libre <a:att>rend</a:att> permet de préciser d’autres types de mise en valeur (par exemple encre rouge, plus grand…), l’éditeur établissant les mots clés qu’il veut retrouver une classe css pour l’affichage.</a:documentation>
-        <ref name="deladd"/>
+        <ref name="titletext"/>
       </element>
     </define>
     <define name="i">
@@ -709,7 +701,7 @@
             <value>italic</value>
           </choice>
         </attribute>
-        <ref name="deladd"/>
+        <ref name="titletext"/>
       </element>
     </define>
     <define name="lb">
@@ -785,7 +777,7 @@
             <value>underline</value>
           </choice>
         </attribute>
-        <text/>
+        <ref name="titletext"/>
       </element>
     </define>
   </div>
