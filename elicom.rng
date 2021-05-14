@@ -611,6 +611,7 @@
           <text/>
           <ref name="note"/>
           <ref name="sup"/>
+          <ref name="u"/>
         </choice>
       </zeroOrMore>
     </define>
